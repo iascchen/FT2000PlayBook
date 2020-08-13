@@ -4,5 +4,5 @@
     
 修改 script.deb.sh 以支持 Kylin。修改后的文件参见 [script.deb.sh](script.deb.sh)
 
-	$ ./script.deb.sh
-	$ sudo apt-get install code-oss=1.47.3-1595888475
+	$ sudo ./script.deb.sh
+	$ sudo apt-get install code-oss
