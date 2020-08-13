@@ -30,8 +30,7 @@ Kylin 使用 Docker 来运行 Android 虚拟机环境，使用《麒麟软件商
     
 准备安装所需的软件。
 
-	$ sudo apt-get update
-	$ sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+	$ sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 	
 	$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 	$ sudo apt-key fingerprint 0EBFCD88
@@ -51,11 +50,9 @@ Kylin 使用 Docker 来运行 Android 虚拟机环境，使用《麒麟软件商
     $ sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 	
     $ docker --version
-	Docker version 19.03.12, build 48a6621
-    
-    $ docker --version
     Docker version 19.03.12, build 48a6621
-    phytium@phytium:~$ docker info
+    
+    $ docker info
     Client:
      Debug Mode: false
 
@@ -109,11 +106,11 @@ Kylin 使用 Docker 来运行 Android 虚拟机环境，使用《麒麟软件商
 
 安装后处理：
 
-	sudo usermod -aG docker $USER
+	$ sudo usermod -aG docker $USER
     
-	sudo systemctl enable docker
-	sudo systemctl daemon-reload && sudo systemctl restart docker
-	sudo reboot
+	$ sudo systemctl enable docker
+	$ sudo systemctl daemon-reload && sudo systemctl restart docker
+	$ sudo reboot
 
 ## 修改 Docker 配置
 
