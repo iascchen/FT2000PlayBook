@@ -35,6 +35,10 @@ FT2000/4 的机器可以符合要求。
 	$ systemctl enable kubelet
     $ sudo systemctl daemon-reload && sudo systemctl restart kubelet
     $ sudo reboot
+    
+### 开启单机模式
+    
+	$ kubectl taint nodes --all node-role.kubernetes.io/master
 
 ## 安装 kind 练习 Kubernetes 单机集群
 
