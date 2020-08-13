@@ -35,7 +35,7 @@
 修改完成后，需要更新一下 apt 源
 
     $ sudo apt update
-    
+
 ## 安装 Markdown 编辑器
 
 Kylin 上没有 Markdown 编辑器。在网上也能够找到很多支持  Ubuntu 的 Markdown Editor 下载和安装，只不过大多只提供 X86-64 的版本。Arm64 的版本只能想办法自己搞！尝试了众多开源项目，最后比较理想的工具是 Zettlr。
@@ -48,6 +48,7 @@ Kylin 上没有 Markdown 编辑器。在网上也能够找到很多支持  Ubunt
 
 由于 raw.githubusercontent.com 被墙。我们只能从 git clone 后再安装。
 
+    $ sudo apt install git
     $ git clone https://github.com/nvm-sh/nvm.git
     $ cd nvm
     $ ./install.sh

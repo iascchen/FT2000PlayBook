@@ -64,4 +64,35 @@ Kylin 使用 Docker 来运行 Android 虚拟机环境，使用《麒麟软件商
     CONTAINER ID        IMAGE                     COMMAND             CREATED             STATUS              PORTS               NAMES
     09e76642c5e5        kydroid3:v3.0-200710.11   "/init.kydroid"     3 days ago          Up 3 seconds                            kydroid-1000-phytium
 
-## K8S
+### 修改 Docker 配置
+
+    $ sudo vi /etc/docker/daemon.json
+    
+增加如下内容：
+
+    {
+        "exec-opts":["native.cgroupdriver=systemd"],
+        "registry-mirrors":["https://docker.mirrors.ustc.edu.cn"]
+    }
+
+然后，重启 Docker
+
+    $ sudo systemctl daemon-reload && sudo systemctl restart docker
+    
+再次检查 docker info，能够看到修改所对应的变化。 
+
+    $ docker info
+    ...
+    Cgroup Driver: systemd
+    ...
+    Registry Mirrors:
+     https://docker.mirrors.ustc.edu.cn/
+    ...
+
+Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kubernetes 的要求。另外修改了 Registry Mirrors 以使用国内源。
+
+## 安装 Kind 练习 Kubernetes
+
+
+
+
