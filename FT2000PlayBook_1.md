@@ -2,7 +2,6 @@
 
 ## 检查系统情况
 
-
     $ cat /proc/version 
     Linux version 4.4.131-20200618.kylin.desktop.android-generic (YHKYLIN-OS@Kylin) (gcc version 5.5.0 20171010 (Ubuntu/Linaro 5.5.0-12ubuntu1~16.04) ) #kylin SMP Thu Jun 18 13:23:13 CST 2020
 
@@ -88,16 +87,14 @@ Kylin 上没有 Markdown 编辑器。在网上也能够找到很多支持  Ubunt
 ### 安装 yarn
 
     $ sudo apt install curl
-    $ curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     
+    $ curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
     $ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
-    $ sudo apt update
-    $ sudo apt install yarn
+    $ sudo apt update && sudo apt install yarn
     
     $ yarn --version
     1.22.4
-
 
 ### 安装Zettlr
 

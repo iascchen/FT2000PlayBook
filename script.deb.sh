@@ -79,6 +79,11 @@ detect_os ()
       dist=`lsb_release -c | cut -f2`
       os=`lsb_release -i | cut -f2 | awk '{ print tolower($1) }'`
 
+      if [ "${dist}" = "juniper" ]; then
+        dist='xenial'
+        os='debian'
+      fi
+
     elif [ -e /etc/debian_version ]; then
       # some Debians have jessie/sid in their /etc/debian_version
       # while others have '6.0.7'
@@ -126,10 +131,10 @@ main ()
   echo "done."
 
 
-  gpg_key_url="https://packagecloud.io/headmelted/codebuilds/gpgkey"
-  apt_config_url="https://packagecloud.io/install/repositories/headmelted/codebuilds/config_file.list?os=${os}&dist=${dist}&source=script"
+  gpg_key_url="https://packagecloud.io/swift-arm/vscode/gpgkey"
+  apt_config_url="https://packagecloud.io/install/repositories/swift-arm/vscode/config_file.list?os=${os}&dist=${dist}&source=script"
 
-  apt_source_path="/etc/apt/sources.list.d/headmelted_codebuilds.list"
+  apt_source_path="/etc/apt/sources.list.d/swift-arm_vscode.list"
 
   echo -n "Installing $apt_source_path..."
 

@@ -123,7 +123,7 @@ Kylin 使用 Docker 来运行 Android 虚拟机环境，使用《麒麟软件商
 
     {
         "exec-opts":["native.cgroupdriver=systemd"],
-        "registry-mirrors":["https://docker.mirrors.ustc.edu.cn"]
+        "registry-mirrors":["https://hub-mirror.c.163.com/"]
     }
 
 然后，重启 Docker
@@ -137,7 +137,7 @@ Kylin 使用 Docker 来运行 Android 虚拟机环境，使用《麒麟软件商
     Cgroup Driver: systemd
     ...
     Registry Mirrors:
-     https://docker.mirrors.ustc.edu.cn/
+     https://hub-mirror.c.163.com/
     ...
 
 Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kubernetes 的要求。另外修改了 Registry Mirrors 以使用国内源。

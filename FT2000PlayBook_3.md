@@ -1,4 +1,4 @@
-# FT2000/4 & Kylin V10 Desktop 玩耍记录(2) —— Kubernetes
+# FT2000/4 & Kylin V10 Desktop 玩耍记录(3) —— Kubernetes
 
 ## 安装 kind 练习 Kubernetes 单机集群
 
