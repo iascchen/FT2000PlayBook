@@ -68,7 +68,7 @@ Kylin 使用 Docker 来运行 Android 虚拟机环境，使用《麒麟软件商
       Supports d_type: true
       Native Overlay Diff: true
      Logging Driver: json-file
-     Cgroup Driver: systemd
+     Cgroup Driver: cgroupfs
      Plugins:
       Volume: local
       Network: bridge host ipvlan macvlan null overlay
@@ -98,8 +98,6 @@ Kylin 使用 Docker 来运行 Android 虚拟机环境，使用《麒麟软件商
      Experimental: false
      Insecure Registries:
       127.0.0.0/8
-     Registry Mirrors:
-      https://docker.mirrors.ustc.edu.cn/
      Live Restore Enabled: false
 
     WARNING: No swap limit support
@@ -111,30 +109,3 @@ Kylin 使用 Docker 来运行 Android 虚拟机环境，使用《麒麟软件商
 	$ sudo systemctl enable docker
 	$ sudo systemctl daemon-reload && sudo systemctl restart docker
 	$ sudo reboot
-
-## 修改 Docker 配置
-
-    $ sudo vi /etc/docker/daemon.json
-    
-增加如下内容：
-
-    {
-        "exec-opts":["native.cgroupdriver=systemd"],
-        "registry-mirrors":["https://hub-mirror.c.163.com/"]
-    }
-
-然后，重启 Docker
-
-    $ sudo systemctl daemon-reload && sudo systemctl restart docker
-    
-再次检查 docker info，能够看到修改所对应的变化。 
-
-    $ docker info
-    ...
-    Cgroup Driver: systemd
-    ...
-    Registry Mirrors:
-     https://hub-mirror.c.163.com/
-    ...
-
-Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kubernetes 的要求。另外修改了 Registry Mirrors 以使用国内源。
