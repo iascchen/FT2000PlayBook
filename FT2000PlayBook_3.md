@@ -76,7 +76,7 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
 
 ### 安装
 
-如遇必要，先删除老版本
+如有必要，先删除老版本
 
     root@phytium:~# apt remove -y kubelet kubeadm kubectl && apt autoremove -y
     
@@ -96,7 +96,7 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
 
 ### 查看并下载 kubeadm 镜像
 
-root@phytium:~# kubeadm config images list
+    root@phytium:~# kubeadm config images list
     W0814 14:56:56.217318    4178 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
     k8s.gcr.io/kube-apiserver:v1.18.8
     k8s.gcr.io/kube-controller-manager:v1.18.8
@@ -122,7 +122,7 @@ root@phytium:~# kubeadm config images list
 
     $ cd FT2000PlayBook/
     $ ./download_k8s.sh
-    $ docker images
+
     $ docker images
     REPOSITORY                                  TAG                 IMAGE ID            CREATED             SIZE
     mirrorgcrio/kube-proxy-arm64                v1.18.6             bf6e9fc98f81        4 weeks ago         116MB
@@ -264,7 +264,7 @@ root@phytium:~# kubeadm config images list
     Client Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.6", GitCommit:"dff82dc0de47299ab66c83c626e08b245ab19037", GitTreeState:"clean", BuildDate:"2020-07-15T16:58:53Z", GoVersion:"go1.13.9", Compiler:"gc", Platform:"linux/arm64"}
     Server Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.6", GitCommit:"dff82dc0de47299ab66c83c626e08b245ab19037", GitTreeState:"clean", BuildDate:"2020-07-15T16:51:04Z", GoVersion:"go1.13.9", Compiler:"gc", Platform:"linux/arm64"}
     
-检查 K8S 情况
+检查 K8S 集群情况
     
     $ kubectl cluster-info
     Kubernetes master is running at https://10.10.20.149:6443

@@ -1,4 +1,4 @@
-# FT2000/4 & Kylin V10 Desktop 玩耍记录(4) —— Kubernetes使用
+# FT2000/4 & Kylin V10 Desktop 玩耍记录(4) —— Kubernetes 使用
 
 ## 重启后处理
 
