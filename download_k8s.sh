@@ -18,10 +18,10 @@ docker pull ${MY_REGISTRY}/pause-arm64:3.2
 docker pull coredns/coredns:1.6.7
 
 ## 添加Tag
-docker tag ${MY_REGISTRY}/kube-apiserver-arm64:v1.18.0 k8s.gcr.io/kube-apiserver:v1.18.6
-docker tag ${MY_REGISTRY}/kube-scheduler-arm64:v1.18.0 k8s.gcr.io/kube-scheduler:v1.18.6
-docker tag ${MY_REGISTRY}/kube-controller-manager-arm64:v1.18.0 k8s.gcr.io/kube-controller-manager:v1.18.6
-docker tag ${MY_REGISTRY}/kube-proxy-arm64:v1.18.0 k8s.gcr.io/kube-proxy:v1.18.6
+docker tag ${MY_REGISTRY}/kube-apiserver-arm64:v1.18.6 k8s.gcr.io/kube-apiserver:v1.18.6
+docker tag ${MY_REGISTRY}/kube-scheduler-arm64:v1.18.6 k8s.gcr.io/kube-scheduler:v1.18.6
+docker tag ${MY_REGISTRY}/kube-controller-manager-arm64:v1.18.6 k8s.gcr.io/kube-controller-manager:v1.18.6
+docker tag ${MY_REGISTRY}/kube-proxy-arm64:v1.18.6 k8s.gcr.io/kube-proxy:v1.18.6
 docker tag ${MY_REGISTRY}/etcd-arm64:3.4.3-0 k8s.gcr.io/etcd:3.4.3-0
 docker tag ${MY_REGISTRY}/pause-arm64:3.2 k8s.gcr.io/pause:3.2
 
