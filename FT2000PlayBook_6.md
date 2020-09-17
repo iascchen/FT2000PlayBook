@@ -4,7 +4,7 @@
 
     wget https://packagecloud.io/install/repositories/swift-arm/vscode/script.deb.sh
     
-修改 script.deb.sh 以支持 Kylin。修改后的文件参见 [script.deb.sh](script.deb.sh)
+修改 script.deb.sh 以支持 Kylin。修改后的文件参见 [script.deb.sh](script/script.deb.sh)
 
 ## 安装
 
