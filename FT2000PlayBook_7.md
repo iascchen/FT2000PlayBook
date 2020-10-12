@@ -12,4 +12,4 @@
     
 ## 配置
 
-
+参考链接 [Thunderbird 企业邮箱使用教程](https://blog.csdn.net/gyxuehu/article/details/82024742)
