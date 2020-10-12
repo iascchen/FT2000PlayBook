@@ -34,6 +34,8 @@
 修改完成后，需要更新一下 apt 源
 
     $ sudo apt update
+    
+请注意：修改完源之后，**不要执行 sudo apt upgrade**，会导致GUI起不来。
 
 ## 安装 Markdown 编辑器
 
@@ -55,14 +57,14 @@ Kylin 上没有 Markdown 编辑器。在网上也能够找到很多支持  Ubunt
 安装之后。可以使用以下命令：
 
     $ nvm --version
-    0.35.3
+    0.36.0
   
     $ nvm install 14
     
     $ node --version
-    v14.8.0
+    v14.13.1
     $ npm --version
-    6.14.7
+    6.14.8
 
 使用国内的 npm 源以提升安装效率。
 
@@ -94,7 +96,7 @@ Kylin 上没有 Markdown 编辑器。在网上也能够找到很多支持  Ubunt
     $ sudo apt update && sudo apt install yarn
     
     $ yarn --version
-    1.22.4
+    1.22.5
 
 ### 安装Zettlr
 
