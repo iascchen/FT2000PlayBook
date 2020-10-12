@@ -20,3 +20,4 @@ FT2000/4 是 Arm64V8 架构的 CPU，在安装软件时，我们通常会用它�
 - [ ] [FT2000/4 & Kylin V10 Desktop 玩耍记录(4)——Kubernetes 使用 ](FT2000PlayBook_4.md)
 - [ ] [FT2000/4 & Kylin V10 Desktop 玩耍记录(5)——MiniConda & Tensorflow](FT2000PlayBook_5.md)
 - [x] [FT2000/4 & Kylin V10 Desktop 玩耍记录(6)——VSCodium](FT2000PlayBook_6.md)
+- [x] [FT2000/4 & Kylin V10 Desktop 玩耍记录(7) —— 邮件 Thunderbird](FT2000PlayBook_7.md)
