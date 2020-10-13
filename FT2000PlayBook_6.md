@@ -1,4 +1,45 @@
-# FT2000/4 & Kylin V10 Desktop 玩耍记录(6) —— VSCodium
+# FT2000/4 & Kylin V10 Desktop 玩耍记录(6) —— VSCode or VSCodium
+
+## 安装 Code-OSS
+
+### 获得基础安装脚本
+
+    wget https://packagecloud.io/install/repositories/swift-arm/vscode/script.deb.sh
+    
+修改 script.deb.sh 以支持 Kylin，在 89 行附近做如下修改。
+
+      if [ -z "$dist" ]; then
+        unknown_os
+      fi
+    
+      if [ "${dist}" = "juniper" ]; then
+        dist='xenial'
+        os='ubuntu'
+      fi
+    
+      # remove whitespace from OS and dist name
+      os="${os// /}"
+      dist="${dist// /}"
+
+修改后的文件参见 [script.deb.sh](script/script.deb.sh)
+
+### 安装
+
+	$ sudo ./script.deb.sh
+	$ sudo apt install code-oss
+    
+    $ code-oss --version
+    1.39.2
+    6ab598523be7a800d7f3eb4d92d7ab9a66069390
+    arm64
+
+### 使用 
+
+	$ code-oss
+    
+## 安装 Codium
+
+**注意** ： 安装后 Codium 的部分扩展使用不太正常。如：git、markdown。以下内容仅供参考
 
 VS Code 1.50 稳定版刚发布，已经提供 Arm64 的版本。VSCodium 是 VSCode 的 Clean 版本。
 
@@ -10,18 +51,14 @@ VS Code 1.50 稳定版刚发布，已经提供 Arm64 的版本。VSCodium 是 VS
 
 VS Codium 剔除了可能侵犯你隐私的功能。VS Codium 的开发者竭尽全力禁用了所有难以寻找的遥测选项，除非你自行编译，否则这已经是你能找到的最干净的 VS Code 版本了。
 
-## 下载安装 VSCodium
+### 下载安装 VSCodium
 
 VS Codium 的 Github 地址是 [https://github.com/VSCodium/vscodium](https://github.com/VSCodium/vscodium)
 
-安装脚本
+    wget https://github.com/VSCodium/vscodium/releases/download/1.50.0/codium_1.50.0-1602204130_arm64.deb
+    sudo dpkg -i codium_1.50.0-1602204130_arm64.deb
 
-    $ sudo apt update
-    $ wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | gpg --dearmor | sudo dd of=/etc/apt/trusted.gpg.d/vscodium.gpg
-    $ echo 'deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs/ vscodium main' | sudo tee --append /etc/apt/sources.list.d/vscodium.list
-    $ sudo apt update && sudo apt install codium
-
-## 使用 
+### 使用 
 
 运行直接执行以下命令即可：
 
