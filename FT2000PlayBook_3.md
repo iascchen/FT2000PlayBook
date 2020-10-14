@@ -63,12 +63,33 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
 
 ### 禁用Swap
 
+    root@phytium:~# swapon --show
+    NAME           TYPE      SIZE USED PRIO
+    /dev/nvme0n1p3 partition 7.5G   0B   -1
+
+    root@phytium:~# cp /etc/fstab /etc/fstab.bak
+
+    root@phytium:~# vi /etc/fstab
+
+        # swap was on /dev/nvme0n1p3 during installation
+        # UUID=bfbc6594-7f72-428f-b3ec-4ac68f41fddd none            swap    sw              0       0   
+
+    root@phytium:~# vi /proc/sys/vm/swappiness
+    10
+
+    swapiness参数表明系统中内存与swap分区的数据交换次数。如果数值是0，那么内核会仅仅在必要的情况下才会把数据写入swap分区；如果值是100，内核会尽量多地把数据写入swap分区，使内存有更多的空闲空间。 
+    这个值设置为0会更好。
+    
+    sudo vi /etc/sysctl.conf
+
+    vm.swappiness=0
+
     root@phytium:~# free -h
                   total        used        free      shared  buff/cache   available
     Mem:           7.7G        1.1G        5.3G         11M        1.2G        6.3G
     Swap:           15G          0B         15G
         
-    root@phytium:~# swapoff /dev/nvme0n1p5
+    root@phytium:~# swapoff /dev/nvme0n1p3
     root@phytium:~# free -h
                   total        used        free      shared  buff/cache   available
     Mem:           7.7G        273M        6.6G         17M        891M        7.2G
