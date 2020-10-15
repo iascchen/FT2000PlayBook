@@ -147,13 +147,13 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
 
 检查当前 mirrorgcrio 上最新的 K8S Image 的版本，使用链接 [https://hub.docker.com/r/mirrorgcrio/kube-apiserver-arm64/tags?page=1&name=1.18](https://hub.docker.com/r/mirrorgcrio/kube-apiserver-arm64/tags?page=1&name=1.18) ，name后的参数可以过滤所要检查的 Docker Image 版本。
 
-**20201015 说明** 目前 arm64 Kubernetes 的国内 Docker Image 镜像，只能下载到 v1.18.6 版本的，所以我们只能必须使用 1.18.6 的 kubelet kubeadm kubectl。
-
 ### 安装
+
+**20201015 说明** 目前 arm64 Kubernetes 的国内 Docker Image 镜像，只能下载到 v1.18.6 版本的，所以我们只能必须使用 1.18.6 的 kubelet kubeadm kubectl。
 
 如有必要，先删除其他版本
 
-    root@phytium:~# apt remove -y kubelet kubeadm kubectl && apt autoremove -y
+    root@phytium:~# apt remove -y --allow-change-held-packages kubelet kubeadm kubectl && apt autoremove -y
     
 安装
 
@@ -215,6 +215,20 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
     k8s.gcr.io/coredns                          1.6.7               6e17ba78cf3e        6 months ago        41.5MB
     mirrorgcrio/etcd-arm64                      3.4.3-0             ab707b0a0ea3        9 months ago        363MB
     k8s.gcr.io/etcd                             3.4.3-0             ab707b0a0ea3        9 months ago        363MB
+
+## 另外一种(失败的)安装办法
+
+放在这里供参考了解。
+
+    root@phytium:~# apt remove -y --allow-change-held-packages kubelet kubeadm kubectl && apt autoremove -y
+
+    root@phytium:~# apt install -y kubelet kubeadm kubectl
+
+    root@phytium:~# kubeadm version
+    kubeadm version: &version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:38:53Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/arm64"}
+
+    root@phytium:~# kubeadm config images pull --kubernetes-version=v1.19.2 --image-repository=registry.aliyuncs.com/google_containers
+    root@phytium:~# kubeadm init --kubernetes-version=v1.19.2
 
 ## Kubernetes 开整
 
