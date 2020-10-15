@@ -143,7 +143,7 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
 
 直接使用 Google 的 K8S Image 会被墙阻断，需要使用国内的 Docker Hub 镜像站下载所需的容器镜像。
 
-检查最近更新的 Mirror，使用链接 [https://hub.docker.com/search?q=kube-apiserver-arm64&type=image](https://hub.docker.com/search?q=kube-apiserver-arm64&type=image) 。在结果页中，可以看到 kubesphere 有较近的更新。
+检查最近更新的 Mirror，使用链接 [https://hub.docker.com/search?q=kube-apiserver-arm64&type=image&sort=updated_at&order=desc](https://hub.docker.com/search?q=kube-apiserver-arm64&type=image&sort=updated_at&order=desc) 。在结果页中，可以看到 kubesphere 有较近的更新。
 
 检查当前 kubesphere 上最新的 K8S Image 的版本，使用链接 [https://hub.docker.com/r/kubesphere/kube-apiserver-arm64/tags?name=1.19](https://hub.docker.com/r/kubesphere/kube-apiserver-arm64/tags?name=1.19) ，name后的参数可以过滤所要检查的 Docker Image 版本。
 
