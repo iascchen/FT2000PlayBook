@@ -5,7 +5,7 @@
 dashboard的yaml文件已经在git下来的仓库中，并设定好了使用 Arm64 的容器。执行：
 
 	$ cd yaml/dashboard
-	$ kubectl apply -f kubernetes-dashboard.yaml
+	$ kubectl apply -f kubernetes-dashboard_arm64.yaml
 
 查看状态：
 
@@ -31,11 +31,13 @@ dashboard的yaml文件已经在git下来的仓库中，并设定好了使用 Arm
 
 登录dashboard的时候, 选择 令牌。并输入上文控制台输出的 Token 内容。
 
-或者选择 Kubeconfig 文件, Mac 路径如下：`$HOME/.kube/config`
+或者选择 Kubeconfig 文件, 路径如下：`$HOME/.kube/config`
 
-	如果需要删除重建，可以采用以下命令
+### Clean up
 
-	$ kubectl delete -f kubernetes-dashboard.yaml
+	如果需要删除此 pod，可以采用以下命令
+
+	$ kubectl delete -f kubernetes-dashboard_arm64.yaml
 
 ## 使用 Stateful Server 测试
 
