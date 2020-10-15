@@ -135,13 +135,19 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
 
 ## Kubernetes 安装
 
-直接使用 Google 的 K8S Image 会被墙阻断，需要使用国内镜像站下载所需的容器镜像。
-
-**20201015 说明** 目前 arm64 Kubernetes 的国内 Docker Image 镜像，只能下载到 v1.18.6 版本的，所以我们只能必须使用 1.18.6 的 kubelet kubeadm kubectl。
-
 以下操作使用 root 账号操作。
 
 	$ sudo -i
+
+### 寻找最近的 DockerHub 镜像
+
+直接使用 Google 的 K8S Image 会被墙阻断，需要使用国内的 Docker Hub 镜像站下载所需的容器镜像。
+
+检查最近更新的 Mirror，使用链接 [https://hub.docker.com/search?q=mirror%20kube-apiserver-arm64&type=image](https://hub.docker.com/search?q=mirror%20kube-apiserver-arm64&type=image) 。在结果页中，可以看到 mirrorgcrio 有较近的更新。
+
+检查当前 mirrorgcrio 上最新的 K8S Image 的版本，使用链接 [https://hub.docker.com/r/mirrorgcrio/kube-apiserver-arm64/tags?page=1&name=1.18](https://hub.docker.com/r/mirrorgcrio/kube-apiserver-arm64/tags?page=1&name=1.18) ，name后的参数可以过滤所要检查的 Docker Image 版本。
+
+**20201015 说明** 目前 arm64 Kubernetes 的国内 Docker Image 镜像，只能下载到 v1.18.6 版本的，所以我们只能必须使用 1.18.6 的 kubelet kubeadm kubectl。
 
 ### 安装
 
