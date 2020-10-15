@@ -1,28 +1,19 @@
 # FT2000/4 & Kylin V10 Desktop 玩耍记录(4) —— Kubernetes 使用
-
-## 重启后处理
-
-Kylin 重启后会自动加载 SWAP 区，会导致 kubelet 起不来。可以做如下操作：
-
-    $ sudo -i
-    root@phytium:~# free -h
-    root@phytium:~# swapoff /dev/nvme0n1p5
-    root@phytium:~# free -h
-    root@phytium:~# systemctl daemon-reload && systemctl restart kubelet
-    root@phytium:~# exit
     
 ## 使用 Dashboard
 
-dashboard的yaml文件已经在git下来的仓库中。进入k8s-for-docker-desktop目录，执行：
+dashboard的yaml文件已经在git下来的仓库中，并设定好了使用 Arm64 的容器。执行：
 
-	$ kubectl create -f kubernetes-dashboard.yaml
+	$ cd yaml/dashboard
+	$ kubectl apply -f kubernetes-dashboard.yaml
 
 查看状态：
 
 	$ kubectl get pod -n kubernetes-dashboard
-	NAME                                         READY   STATUS    RESTARTS   AGE
-	dashboard-metrics-scraper-7b8b58dc8b-zkh4l   1/1     Running   0          3m6s
-	kubernetes-dashboard-866f987876-v276r        1/1     Running   0          3m6s
+	NAME                                        READY   STATUS    RESTARTS   AGE
+	dashboard-metrics-scraper-64c564578-jjkmp   1/1     Running   0          16s
+	kubernetes-dashboard-6f8484b5b-xwfbn        1/1     Running   0          16s
+
 
 配置控制台访问令牌
 
@@ -32,7 +23,7 @@ dashboard的yaml文件已经在git下来的仓库中。进入k8s-for-docker-desk
 
 开启 API Server 访问代理
 
-	kubectl proxy
+	$ kubectl proxy
 
 通过如下 URL 访问 Kubernetes dashboard
 
@@ -42,26 +33,35 @@ dashboard的yaml文件已经在git下来的仓库中。进入k8s-for-docker-desk
 
 或者选择 Kubeconfig 文件, Mac 路径如下：`$HOME/.kube/config`
 
+	如果需要删除重建，可以采用以下命令
+
+	$ kubectl delete -f kubernetes-dashboard.yaml
+
 ## 使用 Stateful Server 测试
 
-[https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/](https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/)
+参考链接 [https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/](https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/) 
+
+下载 yaml 文件。
 
 	wget https://kubernetes.io/examples/application/wordpress/mysql-deployment.yaml
 	wget https://kubernetes.io/examples/application/wordpress/wordpress-deployment.yaml
 	
-	cat <<EOF >./kustomization.yaml
+对它们做了修改，将 docker image 设置为 Arm64 的版本。
+
+	$ cd stateful
+	$ cat <<EOF >./kustomization.yaml
 	secretGenerator:
 	- name: mysql-pass
 	  literals:
 	  - password=MY_PASSWORD
 	resources:
-	  - mysql-deployment.yaml
-	  - wordpress-deployment.yaml
+	  - mysql-deployment_arm64.yaml
+	  - wordpress-deployment_arm64.yaml
 	EOF
 
 ### Apply and Verify
 
-	kubectl apply -k ./
+	$ kubectl apply -k ./
 		
 	kubectl get secrets
 	kubectl get pvc

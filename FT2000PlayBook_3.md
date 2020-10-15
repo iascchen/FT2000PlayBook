@@ -143,25 +143,31 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
 
 直接使用 Google 的 K8S Image 会被墙阻断，需要使用国内的 Docker Hub 镜像站下载所需的容器镜像。
 
-检查最近更新的 Mirror，使用链接 [https://hub.docker.com/search?q=mirror%20kube-apiserver-arm64&type=image](https://hub.docker.com/search?q=mirror%20kube-apiserver-arm64&type=image) 。在结果页中，可以看到 mirrorgcrio 有较近的更新。
+检查最近更新的 Mirror，使用链接 [https://hub.docker.com/search?q=kube-apiserver-arm64&type=image](https://hub.docker.com/search?q=kube-apiserver-arm64&type=image) 。在结果页中，可以看到 kubesphere 有较近的更新。
 
-检查当前 mirrorgcrio 上最新的 K8S Image 的版本，使用链接 [https://hub.docker.com/r/mirrorgcrio/kube-apiserver-arm64/tags?page=1&name=1.18](https://hub.docker.com/r/mirrorgcrio/kube-apiserver-arm64/tags?page=1&name=1.18) ，name后的参数可以过滤所要检查的 Docker Image 版本。
+检查当前 kubesphere 上最新的 K8S Image 的版本，使用链接 [https://hub.docker.com/r/kubesphere/kube-apiserver-arm64/tags?name=1.19](https://hub.docker.com/r/kubesphere/kube-apiserver-arm64/tags?name=1.19) ，name后的参数可以过滤所要检查的 Docker Image 版本。
 
 ### 安装
 
-**20201015 说明** 目前 arm64 Kubernetes 的国内 Docker Image 镜像，只能下载到 v1.18.6 版本的，所以我们只能必须使用 1.18.6 的 kubelet kubeadm kubectl。
+**20201015 说明** 目前 Arm64 Kubernetes 的 DockerHub Image 镜像，只能下载到 v1.19.0 版本的，所以我们只能使用 1.19.0 的 kubelet kubeadm kubectl。
 
 如有必要，先删除其他版本
 
     root@phytium:~# apt remove -y --allow-change-held-packages kubelet kubeadm kubectl && apt autoremove -y
     
-安装
+安装，首先检查可用的 kubeadm 版本号。
 
-    root@phytium:~# apt install -y kubelet=1.18.6-00 kubeadm=1.18.6-00 kubectl=1.18.6-00
+    root@phytium:~# sudo apt-cache madison kubeadm | grep 1.19
+    kubeadm |  1.19.3-00 | https://mirrors.tuna.tsinghua.edu.cn/kubernetes/apt kubernetes-xenial/main arm64 Packages
+    kubeadm |  1.19.2-00 | https://mirrors.tuna.tsinghua.edu.cn/kubernetes/apt kubernetes-xenial/main arm64 Packages
+    kubeadm |  1.19.1-00 | https://mirrors.tuna.tsinghua.edu.cn/kubernetes/apt kubernetes-xenial/main arm64 Packages
+    kubeadm |  1.19.0-00 | https://mirrors.tuna.tsinghua.edu.cn/kubernetes/apt kubernetes-xenial/main arm64 Packages
+
+    root@phytium:~# apt install -y kubelet=1.19.0-00 kubeadm=1.19.0-00 kubectl=1.19.0-00
     root@phytium:~# apt-mark hold kubelet kubeadm kubectl
     
     root@phytium:~# kubeadm version
-    kubeadm version: &version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.6", GitCommit:"dff82dc0de47299ab66c83c626e08b245ab19037", GitTreeState:"clean", BuildDate:"2020-07-15T16:56:34Z", GoVersion:"go1.13.9", Compiler:"gc", Platform:"linux/arm64"}
+    kubeadm version: &version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.0", GitCommit:"e19964183377d0ec2052d1f1fa930c4d7575bd50", GitTreeState:"clean", BuildDate:"2020-08-26T14:28:32Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/arm64"}
 
 安装后处理：
 
@@ -182,17 +188,17 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
     k8s.gcr.io/etcd:3.4.13-0
     k8s.gcr.io/coredns:1.7.0
     
-使用国内镜像站下载所需的容器镜像，目前 arm64 版本只能下载到 v1.18.6 的镜像。所以我们启动时必须使用 `--kubernetes-version=v1.18.6` 来指定版本。
+使用 DockerHub 镜像站下载所需的容器镜像，目前 Arm64 版本只能下载到 v1.19.0 的镜像。所以我们启动时必须使用 `--kubernetes-version=v1.19.0` 来指定版本。
 
-    root@phytium:~# kubeadm config images list --kubernetes-version=v1.18.6
-    W0814 14:57:07.905360    4346 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
-    k8s.gcr.io/kube-apiserver:v1.18.6
-    k8s.gcr.io/kube-controller-manager:v1.18.6
-    k8s.gcr.io/kube-scheduler:v1.18.6
-    k8s.gcr.io/kube-proxy:v1.18.6
+    root@phytium:~# kubeadm config images list --kubernetes-version=v1.19.0
+    W1015 17:26:46.871934   12909 configset.go:348] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
+    k8s.gcr.io/kube-apiserver:v1.19.0
+    k8s.gcr.io/kube-controller-manager:v1.19.0
+    k8s.gcr.io/kube-scheduler:v1.19.0
+    k8s.gcr.io/kube-proxy:v1.19.0
     k8s.gcr.io/pause:3.2
-    k8s.gcr.io/etcd:3.4.3-0
-    k8s.gcr.io/coredns:1.6.7
+    k8s.gcr.io/etcd:3.4.9-1
+    k8s.gcr.io/coredns:1.7.0
 
 退出 Root 用户，返回 Phytium 用户。执行 download_k8s.sh ， 在这个脚本里，对所需下载的 Docker Image 的版本进行了设定。
 
@@ -200,35 +206,14 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
     $ ./download_k8s.sh
 
     $ docker images
-    REPOSITORY                                  TAG                 IMAGE ID            CREATED             SIZE
-    mirrorgcrio/kube-proxy-arm64                v1.18.6             bf6e9fc98f81        4 weeks ago         116MB
-    k8s.gcr.io/kube-proxy                       v1.18.6             bf6e9fc98f81        4 weeks ago         116MB
-    mirrorgcrio/kube-controller-manager-arm64   v1.18.6             1541e09952f8        4 weeks ago         158MB
-    k8s.gcr.io/kube-controller-manager          v1.18.6             1541e09952f8        4 weeks ago         158MB
-    mirrorgcrio/kube-apiserver-arm64            v1.18.6             11fa5f69ce4a        4 weeks ago         169MB
-    k8s.gcr.io/kube-apiserver                   v1.18.6             11fa5f69ce4a        4 weeks ago         169MB
-    mirrorgcrio/kube-scheduler-arm64            v1.18.6             cfa6b0bef7b8        4 weeks ago         95.4MB
-    k8s.gcr.io/kube-scheduler                   v1.18.6             cfa6b0bef7b8        4 weeks ago         95.4MB
-    mirrorgcrio/pause-arm64                     3.2                 2a060e2e7101        6 months ago        484kB
-    k8s.gcr.io/pause                            3.2                 2a060e2e7101        6 months ago        484kB
-    coredns/coredns                             1.6.7               6e17ba78cf3e        6 months ago        41.5MB
-    k8s.gcr.io/coredns                          1.6.7               6e17ba78cf3e        6 months ago        41.5MB
-    mirrorgcrio/etcd-arm64                      3.4.3-0             ab707b0a0ea3        9 months ago        363MB
-    k8s.gcr.io/etcd                             3.4.3-0             ab707b0a0ea3        9 months ago        363MB
-
-## 另外一种(失败的)安装办法
-
-放在这里供参考了解。
-
-    root@phytium:~# apt remove -y --allow-change-held-packages kubelet kubeadm kubectl && apt autoremove -y
-
-    root@phytium:~# apt install -y kubelet kubeadm kubectl
-
-    root@phytium:~# kubeadm version
-    kubeadm version: &version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:38:53Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/arm64"}
-
-    root@phytium:~# kubeadm config images pull --kubernetes-version=v1.19.2 --image-repository=registry.aliyuncs.com/google_containers
-    root@phytium:~# kubeadm init --kubernetes-version=v1.19.2
+    REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
+    k8s.gcr.io/kube-proxy                v1.19.0             5335ed830782        7 weeks ago         116MB
+    k8s.gcr.io/kube-apiserver            v1.19.0             ea03374905cc        7 weeks ago         110MB
+    k8s.gcr.io/kube-controller-manager   v1.19.0             800e696d17cb        7 weeks ago         103MB
+    k8s.gcr.io/kube-scheduler            v1.19.0             a94d6c76e8fe        7 weeks ago         42.6MB
+    k8s.gcr.io/etcd                      3.4.9-1             70e8d49c8aee        3 months ago        312MB
+    k8s.gcr.io/coredns                   1.7.0               db91994f4ee8        3 months ago        42.8MB
+    k8s.gcr.io/pause                     3.2                 2a060e2e7101        8 months ago        484kB
 
 ## Kubernetes 开整
 
@@ -262,30 +247,28 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
     The reset process does not clean your kubeconfig files and you must remove them manually.
     Please, check the contents of the $HOME/.kube/config file.
     
-使用 kubeadm init 创建新集群，过程如下： 
+使用 kubeadm init 创建新集群，命令如下，其中的 `--pod-network-cidr=10.244.0.0/16` 与后面应用的 kube-flannel.yml 有关： 
     
-    root@phytium:~# kubeadm init --kubernetes-version=v1.18.6
-    W0814 15:07:09.591798    9050 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
-    [init] Using Kubernetes version: v1.18.6
+    root@phytium:~# kubeadm init --kubernetes-version=v1.19.0 --pod-network-cidr=10.244.0.0/16
+    W1015 18:34:06.853761    8635 configset.go:348] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
+    [init] Using Kubernetes version: v1.19.0
     [preflight] Running pre-flight checks
+        [WARNING SystemVerification]: missing optional cgroups: hugetlb
     [preflight] Pulling images required for setting up a Kubernetes cluster
     [preflight] This might take a minute or two, depending on the speed of your internet connection
     [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
-    [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
-    [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
-    [kubelet-start] Starting the kubelet
     [certs] Using certificateDir folder "/etc/kubernetes/pki"
     [certs] Generating "ca" certificate and key
     [certs] Generating "apiserver" certificate and key
-    [certs] apiserver serving cert is signed for DNS names [phytium kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 10.10.20.149]
+    [certs] apiserver serving cert is signed for DNS names [kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local phytium] and IPs [10.96.0.1 10.10.20.183]
     [certs] Generating "apiserver-kubelet-client" certificate and key
     [certs] Generating "front-proxy-ca" certificate and key
     [certs] Generating "front-proxy-client" certificate and key
     [certs] Generating "etcd/ca" certificate and key
     [certs] Generating "etcd/server" certificate and key
-    [certs] etcd/server serving cert is signed for DNS names [phytium localhost] and IPs [10.10.20.149 127.0.0.1 ::1]
+    [certs] etcd/server serving cert is signed for DNS names [localhost phytium] and IPs [10.10.20.183 127.0.0.1 ::1]
     [certs] Generating "etcd/peer" certificate and key
-    [certs] etcd/peer serving cert is signed for DNS names [phytium localhost] and IPs [10.10.20.149 127.0.0.1 ::1]
+    [certs] etcd/peer serving cert is signed for DNS names [localhost phytium] and IPs [10.10.20.183 127.0.0.1 ::1]
     [certs] Generating "etcd/healthcheck-client" certificate and key
     [certs] Generating "apiserver-etcd-client" certificate and key
     [certs] Generating "sa" key and public key
@@ -294,21 +277,22 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
     [kubeconfig] Writing "kubelet.conf" kubeconfig file
     [kubeconfig] Writing "controller-manager.conf" kubeconfig file
     [kubeconfig] Writing "scheduler.conf" kubeconfig file
+    [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+    [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+    [kubelet-start] Starting the kubelet
     [control-plane] Using manifest folder "/etc/kubernetes/manifests"
     [control-plane] Creating static Pod manifest for "kube-apiserver"
     [control-plane] Creating static Pod manifest for "kube-controller-manager"
-    W0814 15:07:18.296372    9050 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
     [control-plane] Creating static Pod manifest for "kube-scheduler"
-    W0814 15:07:18.298341    9050 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
     [etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
     [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
-    [apiclient] All control plane components are healthy after 21.002662 seconds
+    [apiclient] All control plane components are healthy after 24.002608 seconds
     [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
-    [kubelet] Creating a ConfigMap "kubelet-config-1.18" in namespace kube-system with the configuration for the kubelets in the cluster
+    [kubelet] Creating a ConfigMap "kubelet-config-1.19" in namespace kube-system with the configuration for the kubelets in the cluster
     [upload-certs] Skipping phase. Please see --upload-certs
     [mark-control-plane] Marking the node phytium as control-plane by adding the label "node-role.kubernetes.io/master=''"
     [mark-control-plane] Marking the node phytium as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
-    [bootstrap-token] Using token: 811gey.j73olv8e7ghcdyzu
+    [bootstrap-token] Using token: r8h8rd.tse8gstju3qg06sm
     [bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
     [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to get nodes
     [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
@@ -323,18 +307,20 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
 
     To start using your cluster, you need to run the following as a regular user:
 
-      mkdir -p $HOME/.kube
-      sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-      sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
     You should now deploy a pod network to the cluster.
     Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
-      https://kubernetes.io/docs/concepts/cluster-administration/addons/
+    https://kubernetes.io/docs/concepts/cluster-administration/addons/
 
     Then you can join any number of worker nodes by running the following on each as root:
 
-    kubeadm join 10.10.20.149:6443 --token 811gey.j73olv8e7ghcdyzu \
-        --discovery-token-ca-cert-hash sha256:45a7b0392eb694435089b722089d53b3d416ec84ad04dae450760c3893ac171d
+    kubeadm join 10.10.20.183:6443 --token r8h8rd.tse8gstju3qg06sm \
+        --discovery-token-ca-cert-hash sha256:f6ead374f0d3a810f2c5b42c9f82e995994091f2e89818a71341137c2118c969 
+    root@phytium:~# 
+
 
 ### kubectl 
 
@@ -347,20 +333,50 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
     $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
     $ kubectl version
-    Client Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.6", GitCommit:"dff82dc0de47299ab66c83c626e08b245ab19037", GitTreeState:"clean", BuildDate:"2020-07-15T16:58:53Z", GoVersion:"go1.13.9", Compiler:"gc", Platform:"linux/arm64"}
-    Server Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.6", GitCommit:"dff82dc0de47299ab66c83c626e08b245ab19037", GitTreeState:"clean", BuildDate:"2020-07-15T16:51:04Z", GoVersion:"go1.13.9", Compiler:"gc", Platform:"linux/arm64"}
+    Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.0", GitCommit:"e19964183377d0ec2052d1f1fa930c4d7575bd50", GitTreeState:"clean", BuildDate:"2020-08-26T14:30:33Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/arm64"}
+    Server Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.0", GitCommit:"e19964183377d0ec2052d1f1fa930c4d7575bd50", GitTreeState:"clean", BuildDate:"2020-08-26T14:23:04Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/arm64"}
+
     
 检查 K8S 集群情况
     
     $ kubectl cluster-info
-    Kubernetes master is running at https://10.10.20.149:6443
-    KubeDNS is running at https://10.10.20.149:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+    Kubernetes master is running at https://10.10.20.183:6443
+    KubeDNS is running at https://10.10.20.183:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
     To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
-    $ kubectl get node
-    NAME      STATUS     ROLES    AGE   VERSION
-    phytium   NotReady   master   10m   v1.18.6
-    
     $ kubectl get secrets
     NAME                  TYPE                                  DATA   AGE
     default-token-mr8z4   kubernetes.io/service-account-token   3      27m
+    
+### 激活网络 Fannal
+
+    $ kubectl get node
+    NAME      STATUS     ROLES    AGE   VERSION
+    phytium   NotReady   master   10m   v1.19.0
+
+此时 k8s node 状态为 NotReady，我们还需要应用 flannel，实现网络映射。
+
+对于 Kubernetes v1.7+ 需要执行以下命令：
+    
+    $ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+此文件已经被提前下载，可以直接使用
+
+    $ cd yaml/fannel
+    $ kubectl apply -f kube-flannel.yml
+
+    $ kubectl get pod -n kube-system
+    NAME                              READY   STATUS             RESTARTS   AGE
+    coredns-f9fd979d6-77vbh           0/1     CrashLoopBackOff   1          4m56s
+    coredns-f9fd979d6-8kf6m           0/1     Error              2          4m56s
+    etcd-phytium                      1/1     Running            0          5m
+    kube-apiserver-phytium            1/1     Running            0          5m
+    kube-controller-manager-phytium   1/1     Running            0          5m
+    kube-flannel-ds-vvrgn             1/1     Running            0          25s
+    kube-proxy-hbh2p                  1/1     Running            0          4m56s
+    kube-scheduler-phytium            1/1     Running            0          5m
+
+    $ kubectl get node
+    NAME      STATUS   ROLES    AGE   VERSION
+    phytium   Ready    master   87s   v1.19.0
