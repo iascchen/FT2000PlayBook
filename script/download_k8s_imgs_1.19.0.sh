@@ -1,4 +1,5 @@
 MY_REGISTRY=kubesphere
+
 K8S_VERSION=1.19.0
 ETCD_VERSION=3.4.9-1
 PAUSE_VERSION=3.2
@@ -6,7 +7,7 @@ COREDNS_VERSION=1.7.0
 
 echo ""
 echo "=========================================================="
-echo "Pull Kubernetes for arm v${K8S_VERSION} Images from docker.io ......"
+echo "Pull Kubernetes for arm v${K8S_VERSION} Images from ${MY_REGISTRY} ......"
 echo "=========================================================="
 echo ""
 
@@ -44,8 +45,5 @@ docker rmi coredns/coredns:${COREDNS_VERSION}
 echo ""
 echo "=========================================================="
 echo "Pull Kubernetes for arm v${K8S_VERSION} Images FINISHED."
-echo "into docker.io/mirrorgcrio, "
-echo " by openthings@https://my.oschina.net/u/2306127."
 echo "=========================================================="
-
 echo ""
