@@ -200,10 +200,10 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
     k8s.gcr.io/etcd:3.4.9-1
     k8s.gcr.io/coredns:1.7.0
 
-退出 Root 用户，返回 Phytium 用户。执行 download_k8s.sh ， 在这个脚本里，对所需下载的 Docker Image 的版本进行了设定。
+退出 Root 用户，返回 Phytium 用户。执行 download_k8s_1.19.0.sh ， 在这个脚本里，对所需下载的 Docker Image 的版本进行了设定。
 
     $ cd FT2000PlayBook/script/
-    $ ./download_k8s.sh
+    $ ./download_k8s_1.19.0.sh
 
     $ docker images
     REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
