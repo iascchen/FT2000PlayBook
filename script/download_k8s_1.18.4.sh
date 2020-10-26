@@ -37,7 +37,7 @@ docker rmi ${MY_REGISTRY}/kube-controller-manager-arm64:v${K8S_VERSION}
 docker rmi ${MY_REGISTRY}/kube-scheduler-arm64:v${K8S_VERSION}
 docker rmi ${MY_REGISTRY}/kube-proxy-arm64:v${K8S_VERSION}
 docker rmi ${MY_REGISTRY}/pause-arm64:${PAUSE_VERSION}
-docker rmi ${MY_REGISTRY}/cruse/etcd-arm64:${ETCD_VERSION}
+docker rmi ${MY_REGISTRY}/etcd-arm64:${ETCD_VERSION}
 
 docker rmi coredns/coredns:${COREDNS_VERSION}
 
