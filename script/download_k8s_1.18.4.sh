@@ -2,7 +2,7 @@ MY_REGISTRY=mirrorgcrio
 K8S_VERSION=1.18.4
 ETCD_VERSION=3.4.3-0
 PAUSE_VERSION=3.2
-COREDNS_VERSION=1.7.0
+COREDNS_VERSION=1.6.7
 
 echo ""
 echo "=========================================================="
