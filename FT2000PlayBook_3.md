@@ -321,16 +321,16 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
         --discovery-token-ca-cert-hash sha256:f6ead374f0d3a810f2c5b42c9f82e995994091f2e89818a71341137c2118c969 
     root@phytium:~# 
 
-
 ### kubectl 
 
 退出 Root 用户。
 
 为 kubectl 配置参数。
 
-    $ mkdir -p $HOME/.kube
-    $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-    $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    $ mkdir -p $HOME/kube
+    $ sudo cp -i /etc/kubernetes/admin.conf $HOME/kube/config
+    $ sudo chown $(id -u):$(id -g) $HOME/kube/config
+    $ export KUBECONFIG=$HOME/kube/admin.conf
 
     $ kubectl version
     Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.0", GitCommit:"e19964183377d0ec2052d1f1fa930c4d7575bd50", GitTreeState:"clean", BuildDate:"2020-08-26T14:30:33Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/arm64"}
@@ -349,13 +349,13 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
     NAME                  TYPE                                  DATA   AGE
     default-token-mr8z4   kubernetes.io/service-account-token   3      27m
     
-### 激活网络 Fannal
+### 映射 Fannal 网络
 
     $ kubectl get node
     NAME      STATUS     ROLES    AGE   VERSION
     phytium   NotReady   master   10m   v1.19.0
 
-此时 k8s node 状态为 NotReady，我们还需要应用 flannel，实现网络映射。
+此时 k8s node 状态为 NotReady，我们还需要映射 flannel 网络。
 
 对于 Kubernetes v1.7+ 需要执行以下命令：
     
@@ -363,13 +363,13 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
 
 此文件已经被提前下载，可以直接使用
 
-    $ cd yaml/fannel
+    $ cd k8s/fannel
     $ kubectl apply -f kube-flannel.yml
 
     $ kubectl get pod -n kube-system
     NAME                              READY   STATUS             RESTARTS   AGE
-    coredns-f9fd979d6-77vbh           0/1     CrashLoopBackOff   1          4m56s
-    coredns-f9fd979d6-8kf6m           0/1     Error              2          4m56s
+    coredns-f9fd979d6-tchqk           0/1     CrashLoopBackOff   2          5m16s
+    coredns-f9fd979d6-zt4rd           0/1     CrashLoopBackOff   2          5m16s
     etcd-phytium                      1/1     Running            0          5m
     kube-apiserver-phytium            1/1     Running            0          5m
     kube-controller-manager-phytium   1/1     Running            0          5m
@@ -380,3 +380,141 @@ Docker 缺省的 `Cgroup Driver: cgroupfs`，修改为 `systemd` 是安装 Kuber
     $ kubectl get node
     NAME      STATUS   ROLES    AGE   VERSION
     phytium   Ready    master   87s   v1.19.0
+
+有时您可能需要了解，如何卸载 flannel 网络：
+
+    # 第一步，在master节点删除flannel
+    $ kubectl delete -f kube-flannel.yml
+     
+    # 第二步，在node节点清理flannel网络留下的文件
+    $ sudo -i
+
+    root@phytium:~# ifconfig cni0 down
+    root@phytium:~# ip link delete cni0
+    root@phytium:~# ifconfig flannel.1 down
+    root@phytium:~# ip link delete flannel.1
+    root@phytium:~# rm -rf /var/lib/cni/
+    root@phytium:~# rm -f /etc/cni/net.d/*
+
+    # 注：执行完上面的操作，重启kubelet
+    root@phytium:~# systemctl daemon-reload && systemctl restart kubelet
+
+### 处理 CoreDNS 问题
+
+接下来，处理 coredns CrashLoopBackOff 的问题。
+
+    $ kubectl get pod -n kube-system
+    NAME                              READY   STATUS             RESTARTS   AGE
+    coredns-f9fd979d6-tchqk           0/1     CrashLoopBackOff   2          5m16s
+    coredns-f9fd979d6-zt4rd           0/1     CrashLoopBackOff   2          5m16s
+
+查看详细信息
+
+    $ kubectl describe -n kube-system pod/coredns-f9fd979d6-tchqk
+    Name:                 coredns-f9fd979d6-tchqk
+    Namespace:            kube-system
+    Priority:             2000000000
+    Priority Class Name:  system-cluster-critical
+    Node:                 phytium/10.10.20.183
+    Start Time:           Fri, 16 Oct 2020 08:42:42 +0800
+    Labels:               k8s-app=kube-dns
+                        pod-template-hash=f9fd979d6
+    Annotations:          <none>
+    Status:               Running
+    IP:                   10.244.0.2
+    IPs:
+    IP:           10.244.0.2
+    Controlled By:  ReplicaSet/coredns-f9fd979d6
+    Containers:
+    coredns:
+        Container ID:  docker://e8b231891a5f5b646a5afc0670ab96f01e0cfc61ae85637f817c4770eb60659a
+        Image:         k8s.gcr.io/coredns:1.7.0
+        Image ID:      docker://sha256:db91994f4ee8f894a1e8a6c1a76f615da8fc3c019300a3686291ce6fcbc57895
+        Ports:         53/UDP, 53/TCP, 9153/TCP
+        Host Ports:    0/UDP, 0/TCP, 0/TCP
+        Args:
+        -conf
+        /etc/coredns/Corefile
+        State:          Waiting
+        Reason:       CrashLoopBackOff
+        Last State:     Terminated
+        Reason:       Error
+        Exit Code:    1
+        Started:      Fri, 16 Oct 2020 09:39:44 +0800
+        Finished:     Fri, 16 Oct 2020 09:39:44 +0800
+        Ready:          False
+        Restart Count:  16
+        Limits:
+        memory:  170Mi
+        Requests:
+        cpu:        100m
+        memory:     70Mi
+        Liveness:     http-get http://:8080/health delay=60s timeout=5s period=10s #success=1 #failure=5
+        Readiness:    http-get http://:8181/ready delay=0s timeout=1s period=10s #success=1 #failure=3
+        Environment:  <none>
+        Mounts:
+        /etc/coredns from config-volume (ro)
+        /var/run/secrets/kubernetes.io/serviceaccount from coredns-token-np6cb (ro)
+    Conditions:
+    Type              Status
+    Initialized       True 
+    Ready             False 
+    ContainersReady   False 
+    PodScheduled      True 
+    Volumes:
+    config-volume:
+        Type:      ConfigMap (a volume populated by a ConfigMap)
+        Name:      coredns
+        Optional:  false
+    coredns-token-np6cb:
+        Type:        Secret (a volume populated by a Secret)
+        SecretName:  coredns-token-np6cb
+        Optional:    false
+    QoS Class:       Burstable
+    Node-Selectors:  kubernetes.io/os=linux
+    Tolerations:     CriticalAddonsOnly op=Exists
+                    node-role.kubernetes.io/master:NoSchedule
+                    node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                    node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+    Events:
+    Type     Reason            Age                    From               Message
+    ----     ------            ----                   ----               -------
+    Warning  FailedScheduling  59m (x6 over 63m)      default-scheduler  0/1 nodes are available: 1 node(s) had taint {node.kubernetes.io/not-ready: }, that the pod didn't tolerate.
+    Normal   Scheduled         59m                    default-scheduler  Successfully assigned kube-system/coredns-f9fd979d6-tchqk to phytium
+    Normal   Pulled            57m (x5 over 59m)      kubelet, phytium   Container image "k8s.gcr.io/coredns:1.7.0" already present on machine
+    Normal   Created           57m (x5 over 59m)      kubelet, phytium   Created container coredns
+    Normal   Started           57m (x5 over 59m)      kubelet, phytium   Started container coredns
+    Warning  BackOff           4m12s (x265 over 59m)  kubelet, phytium   Back-off restarting failed container
+    
+此问题原因是当部署在Kubernetes中的CoreDNS Pod检测到循环时，CoreDNS Pod将开始“CrashLoopBackOff”。这是因为每当CoreDNS检测到循环并退出时，Kubernetes将尝试重新启动Pod。
+
+找到 /etc/resolv.conf 里面的文件
+
+    $ sudo vi /etc/resolv.conf
+
+    # Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)
+    #     DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN
+    nameserver 127.0.1.1
+
+发现 nameserver 是指向本地，修改文件为
+
+    # Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)
+    #     DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN
+    # nameserver 127.0.1.1
+    nameserver 8.8.8.8
+    nameserver 8.8.4.4
+
+    $ sudo -i
+    root@phytium:~# systemctl daemon-reload && systemctl restart docker && systemctl restart kubelet
+    root@phytium:~# exit
+
+    $ kubectl get pod -n kube-system 
+    NAME                              READY   STATUS    RESTARTS   AGE
+    coredns-f9fd979d6-tchqk           1/1     Running   19         81m
+    coredns-f9fd979d6-zt4rd           1/1     Running   19         81m
+    etcd-phytium                      1/1     Running   1          81m
+    kube-apiserver-phytium            1/1     Running   1          81m
+    kube-controller-manager-phytium   1/1     Running   1          81m
+    kube-flannel-ds-74jxr             1/1     Running   1          77m
+    kube-proxy-vv4cz                  1/1     Running   1          81m
+    kube-scheduler-phytium            1/1     Running   2          81m
