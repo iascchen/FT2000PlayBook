@@ -1,4 +1,4 @@
-# FT2000/4 & Kylin V10 Desktop 玩耍记录(5) —— Conda， Jupyter & Tensorflow | Pytorch
+# FT2000/4 & Kylin V10 Desktop 玩耍记录(5) —— Conda， Jupyter
 
 ## MiniConda
 
@@ -9,6 +9,7 @@
 * [miniforge](https://github.com/conda-forge/miniforge)
 * [Archiconda](https://github.com/Archiconda/build-tools/releases)
 * [jjhelmus/conda4aarch64](https://github.com/jjhelmus/conda4aarch64)
+
 ### 下载和安装
 
     $ wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh
@@ -18,12 +19,12 @@
 
 检查 Conda 版本
 
-  $ conda --version
-  conda 4.9.2
-  $ python --version
-  Python 3.8.6
-  $ pip --version
-  pip 20.3.3 from /home/phytium/miniforge3/lib/python3.8/site-packages/pip (python 3.8)
+    $ conda --version
+    conda 4.9.2
+    $ python --version
+    Python 3.8.6
+    $ pip --version
+    pip 20.3.3 from /home/phytium/miniforge3/lib/python3.8/site-packages/pip (python 3.8)
 
 升级命令
 
@@ -37,3 +38,11 @@
     $ conda install jupyterlab
     $ conda install notebook
     $ conda install voila
+
+## Tensorflow 
+
+    $ conda search tensorflow
+
+## Pytorch
+
+    $ conda search pytorch
