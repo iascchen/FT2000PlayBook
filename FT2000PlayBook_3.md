@@ -483,7 +483,7 @@ Kubernetes 建议 Docker 设置为 `Cgroup Driver: cgroupfs`，如果这个值�
 
 此问题原因是当部署在 Kubernetes 中的 CoreDNS Pod 检测到循环时，CoreDNS Pod 将开始“CrashLoopBackOff”。这是因为每当 CoreDNS 检测到循环并退出时，Kubernetes 将尝试重新启动 Pod。
 
-使用 `network-admin` 工具，将 DNS 服务器设置为不是 `127.0.0.1` 的 DNS。
+使用 `network-admin` 工具，将 DNS 服务器设置为 **不是** `127.0.0.1` 的服务 IP，例如：`114.114.114.114`。
 
     $ sudo -i
     root@phytium:~# systemctl daemon-reload && systemctl restart docker && systemctl restart kubelet
